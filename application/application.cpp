@@ -22,21 +22,12 @@ bool Application::initApplication(HINSTANCE hInstance, const uint32_t& width, co
 	mWidth = width;
 	mHeight = height;
 
-	//��ʼ���������ͣ�����ע��
 	registerWindowClass(hInstance);
 
-	//����һ�����壬������ʾ
 	if (!createWindow(hInstance)) {
 		return false;
 	}
 
-	//��ʼ������
-	/*
-	* DC��Device Context �豸��������������
-	* ÿ�����ڶ����Լ���Ӧ���豸����ӳ�䣬��mhDC
-	* ���ﴴ��һ���뱾���ڼ��ݵ�DC��mCanvasDC
-	* ���Դ�mCanvasDC��mhDC������ͼ��������
-	*/
 	mhDC = GetDC(mHwnd);
 	mCanvasDC = CreateCompatibleDC(mhDC);
 
@@ -48,13 +39,13 @@ bool Application::initApplication(HINSTANCE hInstance, const uint32_t& width, co
 	bmpInfo.bmiHeader.biBitCount = 32;
 	bmpInfo.bmiHeader.biCompression = BI_RGB; //ʵ���ϴ洢��ʽΪbgra
 
-	//������mhMem���ݵ�λͼ,��ʵʵ��mhMemָ�����豸�ϻ�����һ���ڴ棬��mCanvasBufferָ����
-	mhBmp = CreateDIBSection(mCanvasDC, &bmpInfo, DIB_RGB_COLORS, (void**)&mCanvasBuffer, 0, 0);//�����ﴴ��buffer���ڴ�
 
-	//һ���豸���Դ������λͼ�����豸ʹ��mhBmp��Ϊ����λͼ����mCanvasDC���ڴ濽������ʵ���ǿ�����mhBmp������
+	mhBmp = CreateDIBSection(mCanvasDC, &bmpInfo, DIB_RGB_COLORS, (void**)&mCanvasBuffer, 0, 0);
+
+
 	SelectObject(mCanvasDC, mhBmp);
 
-	memset(mCanvasBuffer, 0, mWidth * mHeight * 4); //���bufferΪ0
+	memset(mCanvasBuffer, 0, mWidth * mHeight * 4);
 
 	return true;
 }
@@ -64,17 +55,17 @@ ATOM Application::registerWindowClass(HINSTANCE hInstance)
 	WNDCLASSEXW wndClass;
 
 	wndClass.cbSize = sizeof(WNDCLASSEX);
-	wndClass.style = CS_HREDRAW | CS_VREDRAW;	//ˮƽ/��ֱ��С�����仯�ػ洰��
+	wndClass.style = CS_HREDRAW | CS_VREDRAW;
 	wndClass.lpfnWndProc = Wndproc;
 	wndClass.cbClsExtra = 0;
 	wndClass.cbWndExtra = 0;
-	wndClass.hInstance = hInstance;		//Ӧ�ó�����
-	wndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);//Ӧ�ó���ͼ��,���������Ĵ�ͼ��
-	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);//���ͼ��
-	wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);//���ڱ���ɫ
+	wndClass.hInstance = hInstance;
+	wndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wndClass.lpszMenuName = NULL;
-	wndClass.lpszClassName = mWindowClassName;//��������
-	wndClass.hIconSm = LoadIcon(NULL, IDI_WINLOGO);//���ڱ���ͼ��
+	wndClass.lpszClassName = mWindowClassName;
+	wndClass.hIconSm = LoadIcon(NULL, IDI_WINLOGO);
 
 	return RegisterClassExW(&wndClass);
 }
@@ -83,18 +74,12 @@ BOOL Application::createWindow(HINSTANCE hInstance)
 {
 	mWindowInst = hInstance;
 
-	/*
-	* WS_POPUP:����Ҫ������������Ҫ�߿�
-	* WS_OVERLAPPEDWINDOW��ӵ����ͨ���������ڵ������ص㣬�����б������б߿�
-	*
-	* WS_CLIPSIBLINGS:���ֵܴ��ڵ�ס���򲻻���
-	* WS_CLIPCHILDREN:���Ӵ����ڵ�ס�����򲻻���
-	*/
+
 
 	auto dwExStyle = WS_EX_APPWINDOW;
 	auto dwStyle = WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN; 
 
-	//���ڴ��ڱ������ȣ�������Ҫ�����м���ʾ����Ĵ�С,����PopUp�Ĵ��壬��û�б��������򲻻�ı�
+
 	RECT windowRect;
 	windowRect.left = 0L;
 	windowRect.top = 0L;
@@ -104,16 +89,16 @@ BOOL Application::createWindow(HINSTANCE hInstance)
 
 	mHwnd = CreateWindowW(
 		mWindowClassName,
-		(LPCWSTR)"GraphicLearning",	//�������
+		(LPCWSTR)"GraphicLearning",
 		dwStyle,
-		0,//xλ�ã�������Ͻ�
-		0,//yλ�ã�������Ͻ�
+		0,
+		0,
 		windowRect.right - windowRect.left,
 		windowRect.bottom - windowRect.top,
-		nullptr,//������
-		nullptr,//�˵���
-		hInstance,//����ʵ��
-		nullptr);//�������
+		nullptr,
+		nullptr,
+		hInstance,
+		nullptr);
 
 
 	if (!mHwnd)
@@ -173,7 +158,7 @@ void Application::handleMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 		break;
 	}
 	case WM_CLOSE: {
-		DestroyWindow(hWnd);//�˴����ٴ���,���Զ�����WM_DESTROY
+		DestroyWindow(hWnd);
 		break;
 	}
 	case WM_PAINT:
@@ -184,7 +169,7 @@ void Application::handleMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	}
 	break;
 	case WM_DESTROY: {
-		PostQuitMessage(0);//�����߳���ֹ����
+		PostQuitMessage(0);
 		mAlive = false;
 		break;
 	}
