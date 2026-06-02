@@ -8,7 +8,7 @@
 | 使用言語 | C++（標準ライブラリのみ） |
 | 対象環境 | Windows（Win32 API でウィンドウ描画） |
 | ジャンル | 3Dグラフィックス／レンダリング技術デモ |
-| プレイ動画 | 〔URL（YouTube 限定公開など）〕 |
+| プレイ動画 | https://www.youtube.com/watch?v=v55xjXCK1TE |
 
 ## 作品概要
 
